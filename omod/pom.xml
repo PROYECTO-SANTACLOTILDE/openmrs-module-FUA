@@ -5,7 +5,7 @@
   <parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>fua</artifactId>
-		<version>1.0.28</version>
+		<version>1.0.47</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -23,7 +23,7 @@
     <dependency>
       <groupId>org.openmrs.module</groupId>
       <artifactId>fua-api</artifactId>
-      <version>1.0.28</version>
+      <version>1.0.47</version>
     </dependency>
     <dependency>
       <groupId>org.openmrs.web</groupId>
@@ -36,6 +36,11 @@
       <scope>provided</scope>
       <classifier>tests</classifier>
     </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.14</version>
+  </dependency>
   </dependencies>
 
   <build>
