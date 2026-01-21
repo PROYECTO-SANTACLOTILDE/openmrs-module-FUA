@@ -10,10 +10,10 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>fua</artifactId>
-	<version>1.0.28-test</version>
+	<version>1.0.48</version>
 	<packaging>pom</packaging>
 	<name>Fua</name>
-	<description>no description</description>
+	<description>Manejo del Formato Único de Atención (FUA) for Peru's SIS (Seguro Integral de Salud) system.</description>
 
 	<url>https://wiki.openmrs.org/x/FQ4z</url>
 
