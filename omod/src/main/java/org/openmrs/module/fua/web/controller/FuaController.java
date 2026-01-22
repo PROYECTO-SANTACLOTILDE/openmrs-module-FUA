@@ -174,7 +174,13 @@ public class FuaController {
 					+ "/render";
 			*/
 			
-			String remoteUrl = "http://localhost:3000/ws/FUAFormat/"
+			/* String remoteUrl = "http://localhost:3000/ws/FUAFormat/"
+					+ UriUtils.encodePath(identifierFormat, StandardCharsets.UTF_8)
+					+ "/render";
+			*/
+
+			String baseUrl = getFuaGeneratorBaseUrl();
+			String remoteUrl = baseUrl + "/ws/FUAFormat/"
 					+ UriUtils.encodePath(identifierFormat, StandardCharsets.UTF_8)
 					+ "/render";
 
@@ -255,7 +261,8 @@ public class FuaController {
 					+ "/render";
 			*/
 
-			String remoteUrl = "http://hii1sc-dev.inf.pucp.edu.pe/services/fua-generator/ws/FUAFormat/"
+			String baseUrl = getFuaGeneratorBaseUrl();
+			String remoteUrl = baseUrl + "/ws/FUAFormat/"
 					+ UriUtils.encodePath(identifierFormat, StandardCharsets.UTF_8)
 					+ "/render";
 
@@ -355,7 +362,8 @@ public class FuaController {
 					+ "/render";
 			*/
 
-			String remoteUrl = "http://hii1sc-dev.inf.pucp.edu.pe/services/fua-generator/ws/FUAFormat/"
+			String baseUrl = getFuaGeneratorBaseUrl();
+			String remoteUrl = baseUrl + "/ws/FUAFormat/"
 					+ UriUtils.encodePath(identifierFormat, StandardCharsets.UTF_8)
 					+ "/render";
 
@@ -602,5 +610,17 @@ public class FuaController {
 		}
 	}
 
-
+	// Método para obtener la URL base del generador FUA
+	private String getFuaGeneratorBaseUrl() {
+		String url = Context.getAdministrationService()
+				.getGlobalProperty(FuaConfig.FUA_GENERATOR_URL_GP);
+		
+		if (org.apache.commons.lang3.StringUtils.isBlank(url)) {
+			url = FuaConfig.FUA_GENERATOR_URL_DEFAULT;
+			log.warn("Global property " + FuaConfig.FUA_GENERATOR_URL_GP 
+					+ " not set, using default: " + url);
+		}
+		
+		return url;
+	}
 }

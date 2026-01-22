@@ -26,4 +26,9 @@ public class FuaConfig {
 	public final static String DELETE_FUA_PRIVILEGE = "Delete Fua Privilege";
 	
 	public final static String UPDATE_FUA_PRIVILEGE = "Update Fua Privilege";
+
+	// Global Property for FUA Generator microservice URL
+    public final static String FUA_GENERATOR_URL_GP = "fua.generator.url";
+    
+    public final static String FUA_GENERATOR_URL_DEFAULT = "http://localhost:3000";
 }

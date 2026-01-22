@@ -43,7 +43,10 @@ public class FuaRedirectionController {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:3000/ws/FUAFormat", requestEntity, String.class);
+        String baseUrl = getFuaGeneratorBaseUrl();
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                baseUrl + "/ws/FUAFormat", requestEntity, String.class);
+        //ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:3000/ws/FUAFormat", requestEntity, String.class);
         //ResponseEntity<String> response = restTemplate.postForEntity("http://hii1sc-dev.inf.pucp.edu.pe/services/fua-generator/ws/FUAFormat", requestEntity, String.class);
 
         return ResponseEntity
@@ -76,8 +79,8 @@ public class FuaRedirectionController {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.postForEntity("http://fua-generator:3000/ws/FUAFormat", requestEntity, String.class);
-        //ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/openmrs/services/fua-generator/ws/FUAFormat", requestEntity, String.class);
+        String baseUrl = getFuaGeneratorBaseUrl();
+        ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/ws/FUAFormat", requestEntity, String.class);        //ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/openmrs/services/fua-generator/ws/FUAFormat", requestEntity, String.class);
 
         return ResponseEntity
                 .status(response.getStatusCode())
@@ -110,7 +113,8 @@ public class FuaRedirectionController {
 
         RestTemplate restTemplate = new RestTemplate();
         //ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:3000/ws/FUAFormat", requestEntity, String.class);
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/services/fua-generator/ws/FUAFormat", requestEntity, String.class);
+        String baseUrl = getFuaGeneratorBaseUrl();
+        ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/ws/FUAFormat", requestEntity, String.class);
 
         return ResponseEntity
                 .status(response.getStatusCode())
@@ -188,9 +192,10 @@ public class FuaRedirectionController {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-        RestTemplate restTemplate = new RestTemplate();
+        String baseUrl = getFuaGeneratorBaseUrl();
         //ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:3000/ws/FUAFormat", requestEntity, String.class);
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:3000/ws/FUAFormat", requestEntity, String.class);
+        //ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:3000/ws/FUAFormat", requestEntity, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/ws/FUAFormat", requestEntity, String.class);
 
         return ResponseEntity
                 .status(response.getStatusCode())
@@ -222,9 +227,10 @@ public class FuaRedirectionController {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-        RestTemplate restTemplate = new RestTemplate();
+        String baseUrl = getFuaGeneratorBaseUrl();
         //ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:3000/ws/FUAFormat", requestEntity, String.class);
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:3000/openmrs/ws/FUAFormat", requestEntity, String.class);
+        //ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:3000/openmrs/ws/FUAFormat", requestEntity, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/ws/FUAFormat", requestEntity, String.class);
 
         return ResponseEntity
                 .status(response.getStatusCode())
