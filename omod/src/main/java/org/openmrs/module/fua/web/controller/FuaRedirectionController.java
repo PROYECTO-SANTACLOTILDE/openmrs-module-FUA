@@ -1,5 +1,9 @@
 package org.openmrs.module.fua.web.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.fua.FuaConfig;
 import org.openmrs.module.fua.web.utils.MultipartInputStreamFileResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -18,6 +22,11 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class FuaRedirectionController {
+
+        protected final Log log = LogFactory.getLog(getClass());
+        
+        protected final RestTemplate restTemplate = new RestTemplate();
+
 
     @RequestMapping(value = "/FUAFormat", method = RequestMethod.POST)
     @ResponseBody
@@ -238,6 +247,19 @@ public class FuaRedirectionController {
                 .body(response.getBody());
     }
 
+        // Método para obtener la URL base del generador FUA
+        private String getFuaGeneratorBaseUrl() {
+		String url = Context.getAdministrationService()
+				.getGlobalProperty(FuaConfig.FUA_GENERATOR_URL_GP);
+		
+		if (org.apache.commons.lang3.StringUtils.isBlank(url)) {
+			url = FuaConfig.FUA_GENERATOR_URL_DEFAULT;
+			log.warn("Global property " + FuaConfig.FUA_GENERATOR_URL_GP 
+					+ " not set, using default: " + url);
+		}
+		
+		return url;
+	}
 
 
     

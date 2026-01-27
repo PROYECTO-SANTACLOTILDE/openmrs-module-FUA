@@ -13,6 +13,7 @@ import org.openmrs.api.context.UsernamePasswordCredentials;
 import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.fua.Fua;
 import org.openmrs.module.fua.FuaEstado;
+import org.openmrs.module.fua.FuaConfig;
 import org.openmrs.module.fua.api.FuaEstadoService;
 import org.openmrs.module.fua.api.FuaService;
 import org.openmrs.module.fua.api.FuaVersionService;
