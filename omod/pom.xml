@@ -44,7 +44,7 @@
   </dependencies>
 
   <build>
-    <finalName>${project.parent.artifactId}-test-${fua.base.version}</finalName>
+    <finalName>${project.parent.artifactId}-${fua.base.version}</finalName>
 
     <plugins>
       <plugin>

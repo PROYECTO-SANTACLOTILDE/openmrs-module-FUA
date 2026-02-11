@@ -187,7 +187,7 @@ public class FuaController {
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.set("fuagentoken", "fuagenerator"); // ← tu header personalizado
+			headers.set("fuagentoken", "soyuntokenxd"); // ← tu header personalizado
 
 			HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 			RestTemplate restTemplate = new RestTemplate(

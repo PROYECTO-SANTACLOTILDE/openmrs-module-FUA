@@ -37,7 +37,7 @@ public class FuaRedirectionController {
     ) throws IOException {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("fuagentoken", "fuagenerator");
+        headers.set("fuagentoken", "soyuntokenxd");
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
