@@ -30,5 +30,5 @@ public class FuaConfig {
 	// Global Property for FUA Generator microservice URL
     public final static String FUA_GENERATOR_URL_GP = "fua.generator.url";
     
-    public final static String FUA_GENERATOR_URL_DEFAULT = "http://fua-generator:3000";
+    public final static String FUA_GENERATOR_URL_DEFAULT = "http://localhost:3000";
 }
