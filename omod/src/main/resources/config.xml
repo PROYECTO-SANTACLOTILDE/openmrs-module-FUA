@@ -77,6 +77,16 @@
 			http://hii1sc-dev.inf.pucp.edu.pe/services/fua-generator
 		</description>
 	</globalProperty>
+	<globalProperty>
+		<property>fua.identifier</property>
+		<defaultValue></defaultValue>
+		<description>
+			Identifier used by the FUA module. This is a configurable string value
+			that can be set by the administrator and used when communicating with
+			external FUA-related services.
+		</description>
+	</globalProperty>
+
 	<!-- /Required Global Properties -->
 	
 	<!--

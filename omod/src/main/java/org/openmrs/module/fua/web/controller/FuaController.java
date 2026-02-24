@@ -47,6 +47,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import liquibase.pro.packaged.f;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.core.JsonProcessingException;   // ← la excepción
 import org.apache.commons.lang3.StringUtils;
@@ -231,7 +234,7 @@ public class FuaController {
 			/* 4. Headers -------------------------------------------------------- */
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.set("fuagentoken", "soyuntokenxd");
+			headers.set("fuagentoken", "fuagenerator");
 
 			HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
@@ -371,6 +374,7 @@ public class FuaController {
 				fua.setVisitUuid(visitUuid);
 				fua.setPayload(payload);
 				fua.setFuaEstado(estadoPendiente);
+				fua.setFuaGeneratorUuid(generarFuadeFuaGenerator(fua));
 				System.out.println("///////////////EL FUA ES NULL///////////////////////////////////////////////: " + fua);
 				System.out.println("	EL FUA ES NUEVO:");
 				System.out.println("	UUID: " + fua.getUuid());
@@ -380,6 +384,7 @@ public class FuaController {
 			else{
 				fuaVersionService.saveFuaVersion(fua, "GenerateFromVisit");
 				fua.setPayload(payload);
+				fua.setFuaGeneratorUuid(generarFuadeFuaGenerator(fua));
 				System.out.println("///////////////EL FUA NO ES NULL///////////////////////////////////////////////: " + fua);
 			}
 			
@@ -470,4 +475,81 @@ public class FuaController {
 		
 		return url;
 	}
+
+	private String getFuaIdentifierBase() {
+
+		String url = Context.getAdministrationService()
+				.getGlobalProperty(FuaConfig.FUA_GENERATOR_IDENTIFIER);		
+		return url;
+	}
+
+	private String generarFuadeFuaGenerator(Fua fua) {
+
+		try {
+			/* 1. Variables -------------------------------------------------- */
+			String baseUrl = getFuaGeneratorBaseUrl();
+			String remoteUrl = baseUrl + "/ws/FUAFromVisit";
+			String identifierFormat= getFuaIdentifierBase();
+			System.out.println("################################################################");
+			System.out.println("################################################################");
+			System.out.println("################################################################");
+			System.out.println("IdentifierFormat: " + identifierFormat);
+			System.out.println("################################################################");
+			System.out.println("################################################################");
+			System.out.println("################################################################");
+
+			/* 2. Construimos el body ---------------------------------------- */
+			ObjectMapper mapper = new ObjectMapper();
+
+			Map<String, Object> requestBody = new HashMap<>();
+			requestBody.put("payload",
+					StringUtils.isBlank(fua.getPayload())
+							? null
+							: mapper.readTree(fua.getPayload()));
+
+			requestBody.put("schemaType", "xd");
+			requestBody.put("outputType", "xd");
+			requestBody.put("createdBy", "Fua-user");
+			requestBody.put("FUAFormatFromSchemaId", identifierFormat);
+
+			
+
+			/* 3. Headers ------------------------------------------------------ */
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("fuagentoken", "fuagenerator");
+
+			HttpEntity<Map<String, Object>> entity =
+					new HttpEntity<>(requestBody, headers);
+
+			RestTemplate restTemplate = new RestTemplate();
+
+			/* 4. Llamada POST ------------------------------------------------- */
+			ResponseEntity<String> response = restTemplate.exchange(
+					remoteUrl,
+					HttpMethod.POST,
+					entity,
+					String.class);
+
+			if (!response.getStatusCode().is2xxSuccessful()) {
+				throw new RuntimeException(
+						"Error microservicio: " + response.getStatusCode());
+			}
+
+			JsonNode root = mapper.readTree(response.getBody());
+
+			if (!root.has("uuid")) {
+				throw new RuntimeException("El microservicio no devolvió uuid");
+			}
+
+			return root.get("uuid").asText();
+
+		} catch (Exception e) {
+			e.printStackTrace(); // ← importante
+			throw new RuntimeException(
+				"Error generando FUA desde el generador externo: " + e.getMessage(), e);
+		}
+	}
+
 }
+
