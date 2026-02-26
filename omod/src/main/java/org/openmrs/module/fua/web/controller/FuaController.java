@@ -417,6 +417,8 @@ public class FuaController {
 		}
 	}
 
+
+
 	@RequestMapping(value = "/estado/update/{fuaId}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<?> actualizarEstadoFua(@PathVariable Integer fuaId, @RequestBody Map<String, Object> body) {
@@ -476,6 +478,83 @@ public class FuaController {
 		return url;
 	}
 
+	@RequestMapping(
+			value = "/RenderFUA/{visitUuid}",
+			method = RequestMethod.POST,
+			produces = MediaType.TEXT_HTML_VALUE
+	)
+	@ResponseBody
+	public ResponseEntity<String> renderFua(@PathVariable String visitUuid) {
+
+		try {
+
+			log.info("Renderizando FUA para visita UUID: " + visitUuid);
+
+			// 1️⃣ Buscar FUA en BD
+			Fua fua = fuaService.getFuaByVisitUuid(visitUuid);
+			log.info("FUA encontrado con uuid: " + fua.getUuid());
+			
+			if (fua == null) {
+				return ResponseEntity
+						.status(HttpStatus.NOT_FOUND)
+						.body("<h2>No existe FUA para esta visita</h2>");
+			}
+
+			if (StringUtils.isBlank(fua.getFuaGeneratorUuid())) {
+				return ResponseEntity
+						.status(HttpStatus.BAD_REQUEST)
+						.body("<h2>El FUA no tiene UUID del generador</h2>");
+			}
+
+			// 2️⃣ Construir URL remota
+			String baseUrl = getFuaGeneratorBaseUrl();
+			String remoteUrl = baseUrl
+					+ "/ws/FUAFromVisit/"
+					+ fua.getFuaGeneratorUuid()
+					+ "/render";
+
+			log.info("Llamando a microservicio: " + remoteUrl);
+
+			// 3️⃣ Headers
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("fuagentoken", "fuagenerator");
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			RestTemplate restTemplate = new RestTemplate();
+
+			// 4️⃣ Llamada GET
+			ResponseEntity<String> response = restTemplate.exchange(
+					remoteUrl,
+					HttpMethod.POST,
+					entity,
+					String.class
+			);
+
+			if (!response.getStatusCode().is2xxSuccessful()) {
+				return ResponseEntity
+						.status(response.getStatusCode())
+						.body("<h2>Error renderizando FUA</h2>");
+			}
+
+			// 5️⃣ Devolver HTML directamente
+			return ResponseEntity
+					.ok()
+					.contentType(MediaType.TEXT_HTML)
+					.body(response.getBody());
+
+		} catch (Exception e) {
+
+			log.error("Error renderizando FUA", e);
+
+			return ResponseEntity
+					.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("<h2>Error interno renderizando FUA</h2><pre>"
+							+ e.getMessage()
+							+ "</pre>");
+		}
+	}
+
 	private String getFuaIdentifierBase() {
 
 		String url = Context.getAdministrationService()
@@ -491,13 +570,9 @@ public class FuaController {
 			String remoteUrl = baseUrl + "/ws/FUAFromVisit";
 			String identifierFormat= getFuaIdentifierBase();
 			System.out.println("################################################################");
-			System.out.println("################################################################");
-			System.out.println("################################################################");
 			System.out.println("IdentifierFormat: " + identifierFormat);
 			System.out.println("################################################################");
-			System.out.println("################################################################");
-			System.out.println("################################################################");
-
+			
 			/* 2. Construimos el body ---------------------------------------- */
 			ObjectMapper mapper = new ObjectMapper();
 
